@@ -8,8 +8,14 @@ module.exports = function (query) {
 };
 
 function tie (server, query, ports) {
+    var originalPorts
     if (typeof ports.query !== 'function') {
         ports = seaport.connect.apply(null, [].slice.call(arguments, 2));
+        var close = server.close;
+        server.close = function () {
+            ports.close();
+            close();
+        };
     }
     
     var matching = (function () {
