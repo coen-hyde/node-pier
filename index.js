@@ -1,15 +1,23 @@
 var EventEmitter = require('events').EventEmitter;
 var seaport = require('seaport');
 
-module.exports = function (ports, query) {
+module.exports = function (query) {
     var server = seaport.createServer();
+    server.tie = tie.bind(null, server, query);
+    return server;
+};
+
+function tie (server, query, ports) {
+    if (typeof ports.query !== 'function') {
+        ports = seaport.connect.apply(null, [].slice.call(arguments, 2));
+    }
     
     var matching = (function () {
+        if (query === undefined) return function () { return true };
         var role = query.split('@')[0];
         var version = query.split('@')[1];
         
         return function (rec) {
-            if (query === undefined) return true;
             if (rec.role !== role) return false;
             if (version === undefined) return true;
             if (!semver.validRange(version)) {
@@ -79,4 +87,4 @@ module.exports = function (ports, query) {
     });
     
     return server;
-};
+}
