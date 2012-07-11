@@ -4,6 +4,8 @@ Replicate a
 [seaport service registry](https://github.com/substack/seaport)
 for fast local in-memory access or redundancy.
 
+[![build status](https://secure.travis-ci.org/substack/node-pier.png)](http://travis-ci.org/substack/node-pier)
+
 # example
 
 ``` js
